@@ -1,0 +1,16 @@
+[Bb]in/
+[Oo]bj/
+
+.idea/
+*.sln.dotSettings.user
+
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+
+.DS_Store
+Thumbs.db
+
+*.nupkg
+/packages/
