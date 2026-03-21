@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dane", "Dane\Dane.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logika", "Logika\Logika.csproj", "{D5F2CD59-5E67-41D3-A7DC-D638D655078C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{98D78020-A373-41B5-8CA9-161842B556C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{D5F2CD59-5E67-41D3-A7DC-D638D655078C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5F2CD59-5E67-41D3-A7DC-D638D655078C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5F2CD59-5E67-41D3-A7DC-D638D655078C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98D78020-A373-41B5-8CA9-161842B556C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98D78020-A373-41B5-8CA9-161842B556C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98D78020-A373-41B5-8CA9-161842B556C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98D78020-A373-41B5-8CA9-161842B556C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
