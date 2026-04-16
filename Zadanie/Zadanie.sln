@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logika", "Logika\Logika.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{98D78020-A373-41B5-8CA9-161842B556C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{619D37F3-A98A-464E-B53F-9373213552AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{98D78020-A373-41B5-8CA9-161842B556C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98D78020-A373-41B5-8CA9-161842B556C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98D78020-A373-41B5-8CA9-161842B556C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{619D37F3-A98A-464E-B53F-9373213552AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{619D37F3-A98A-464E-B53F-9373213552AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{619D37F3-A98A-464E-B53F-9373213552AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{619D37F3-A98A-464E-B53F-9373213552AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
