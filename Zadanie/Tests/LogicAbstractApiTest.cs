@@ -24,8 +24,8 @@ public class LogicAbstractApiTest
         {
             Assert.IsTrue(ball.X >= 0);
             Assert.IsTrue(ball.Y >= 0);
-            Assert.IsTrue(ball.X <= 800 - ball.Radius * 2);
-            Assert.IsTrue(ball.Y <= 800 - ball.Radius * 2);
+            Assert.IsTrue(ball.X <= 100 - ball.Radius * 2);
+            Assert.IsTrue(ball.Y <= 100 - ball.Radius * 2);
             
         }
     }

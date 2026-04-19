@@ -1,12 +1,14 @@
 ﻿namespace Model;
 using Logika;
 using Dane;
+using System.Linq;
 
 public abstract class ModelAbstractApi
 {
     public abstract void Start(int ballCount);
     public abstract void Stop();
-    public abstract IEnumerable<Ball> GetBalls();
+
+    public abstract IEnumerable<BallModel> GetBalls();
 
     public static ModelAbstractApi CreateApi(LogicAbstractApi? logicApi = null)
     {
@@ -32,6 +34,9 @@ internal class ModelApi : ModelAbstractApi
     }
     
     public override void Stop() => _logicApi.Stop();
-    public override IEnumerable<Ball> GetBalls() => _logicApi.GetBalls();
+    public override IEnumerable<BallModel> GetBalls()
+    {
+        return _logicApi.GetBalls().Select(b => new BallModel(b)).ToList();
+    }
 }
 

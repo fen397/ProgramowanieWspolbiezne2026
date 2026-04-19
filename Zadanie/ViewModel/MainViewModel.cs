@@ -10,7 +10,7 @@ public class MainViewModel : System.ComponentModel.INotifyPropertyChanged
     private readonly ModelAbstractApi _modelApi;
     private int _ballCount;
     
-    public ObservableCollection<Ball> Balls { get; } = new();
+    public ObservableCollection<BallModel> Balls { get; } = new();
     public ICommand StartCommand { get; }
 
     public MainViewModel()
@@ -33,9 +33,9 @@ public class MainViewModel : System.ComponentModel.INotifyPropertyChanged
     {
         _modelApi.Start(BallCount);
         Balls.Clear();
-        foreach (var ball in _modelApi.GetBalls())
+        foreach (var ballModel in _modelApi.GetBalls())
         {
-            Balls.Add(ball);
+            Balls.Add(ballModel);
         }
      
         

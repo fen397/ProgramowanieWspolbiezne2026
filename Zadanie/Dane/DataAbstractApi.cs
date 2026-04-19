@@ -21,7 +21,7 @@ internal class DataApi : DataAbstractApi
 
     public DataApi()
     {
-        _board = new Board(800, 600);
+        _board = new Board(100, 100);
     }
 
     public override Board GetBoard()
@@ -34,7 +34,7 @@ internal class DataApi : DataAbstractApi
         _balls.Clear();
         for (int i = 0; i < count; i++)
         {
-            _balls.Add(new Ball{X = 0, Y = 0, Radius = 10});
+            _balls.Add(new Ball{X = 0, Y = 0, Radius = 1.25});
         }
     }
     public override IEnumerable<Ball> GetBalls()

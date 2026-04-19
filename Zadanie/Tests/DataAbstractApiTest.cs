@@ -29,8 +29,8 @@ public class DataAbstractApiTest
 
         var board = api.GetBoard();
         
-        Assert.AreEqual(800, board.Width);
-        Assert.AreEqual(600, board.Height);
+        Assert.AreEqual(100, board.Width);
+        Assert.AreEqual(100, board.Height);
 
     }
 }

@@ -50,8 +50,8 @@
                     <DataTemplate>
                         <Ellipse
                             Fill="Blue"
-                            Height="20"
-                            Width="20">
+                            Height="{Binding Diameter}"
+                            Width="{Binding Diameter}">
                             <Ellipse.Effect>
                                 <DropShadowEffect
                                     BlurRadius="5"

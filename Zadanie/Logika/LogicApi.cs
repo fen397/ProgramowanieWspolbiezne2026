@@ -34,8 +34,8 @@ internal class LogicApi : LogicAbstractApi
                 ball.X = _random.Next(0, maxX );
                 ball.Y = _random.Next(0, maxY);
                 
-                ball.VX = _random.NextDouble() * 4 - 2;
-                ball.VY = _random.NextDouble() * 4 - 2;
+                ball.VX = _random.NextDouble() * 1.0 - 0.5;
+                ball.VY = _random.NextDouble() * 1.0 - 0.5;
             }
         }
     }
