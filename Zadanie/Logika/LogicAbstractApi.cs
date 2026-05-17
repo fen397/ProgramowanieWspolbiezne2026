@@ -10,7 +10,7 @@ public abstract class LogicAbstractApi
     public abstract void Stop();
     public abstract IEnumerable<Ball> GetBalls();
 
-    public static LogicAbstractApi CreateApi(DataAbstractApi data = null)
+    public static LogicAbstractApi CreateApi(DataAbstractApi? data = null)
     {
         return new LogicApi(data ?? DataAbstractApi.CreateApi());
     }
