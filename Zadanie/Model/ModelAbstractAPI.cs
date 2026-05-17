@@ -22,6 +22,8 @@ internal class ModelApi : ModelAbstractApi
 {
     private readonly LogicAbstractApi _logicApi;
 
+    private readonly List<BallModel> _ballModels = new List<BallModel>();
+
     public ModelApi(LogicAbstractApi logicApi)
     {
         _logicApi = logicApi;
@@ -29,14 +31,19 @@ internal class ModelApi : ModelAbstractApi
 
     public override void Start(int ballCount)
     {
+        _logicApi.Stop();
+        
         _logicApi.CreateBalls(ballCount);
+        
+        _ballModels.Clear();
+
+        foreach (var ball in _logicApi.GetBalls())
+        {
+            _ballModels.Add(new BallModel(ball));
+        }
         _logicApi.Start();
     }
     
     public override void Stop() => _logicApi.Stop();
-    public override IEnumerable<BallModel> GetBalls()
-    {
-        return _logicApi.GetBalls().Select(b => new BallModel(b)).ToList();
-    }
+    public override IEnumerable<BallModel> GetBalls() => _ballModels;
 }
-

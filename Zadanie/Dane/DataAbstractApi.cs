@@ -27,7 +27,7 @@ internal class DataApi : DataAbstractApi
 
     public DataApi()
     {
-        _board = new Board(100, 100);
+        _board = new Board(100, 75);
     }
 
     public override Board GetBoard()
@@ -38,33 +38,37 @@ internal class DataApi : DataAbstractApi
     public override void CreateBalls(int count)
     {
         _balls.Clear();
-        double radius = 10.0;
         for (int i = 0; i < count; i++)
         {
-            //Obliczamy granice aby kula nie pojawiłą sie w ścianie
-            int minX = (int)radius;
-            int maxX = _board.Width - (int)radius;
-            int minY = (int)radius;
-            int maxY = _board.Height - (int)radius;
-
-            Ball newBall = new Ball
-            {
-                X = _random.Next(minX, maxX),
-                Y = _random.Next(minY, maxY),
-                Radius = radius,
-
-                //Losowa masa od 1.0 do 5.0
-                Mass = _random.NextDouble() * 4.0 + 1.0,
-
-                VX = (_random.NextDouble() * 4.0) - 2.0, // Prędkość od -2.0 do 2.0
-                VY = (_random.NextDouble() * 4.0) - 2.0
-
-            };
-
-            if (Math.Abs(newBall.VX) < 0.5) newBall.VX = 1.0;
-            if (Math.Abs(newBall.VY) < 0.5) newBall.VY = 1.0;
             
-            _balls.Add(newBall);
+            double radius = _random.NextDouble() * (3.5 - 1.5) + 1.5;  // Promień od 1.5 do 3.5
+            //Obliczamy granice aby kula nie pojawiłą sie w ścianie
+            double minX = radius;
+            double maxX = _board.Width - radius;
+            double minY = radius;
+            double maxY = _board.Height - radius;
+            
+            double x = _random.NextDouble() * (maxX - minX) + minX;
+            double y = _random.NextDouble() * (maxY - minY) + minY;
+            
+            double vx = (_random.NextDouble() * 1.0) - 0.5;
+            double vy = (_random.NextDouble() * 1.0) - 0.5;
+            
+            if (Math.Abs(vx) < 0.1) vx = 0.2;
+            if (Math.Abs(vy) < 0.1) vy = 0.2;
+            
+            double mass = radius * radius;
+
+            _balls.Add(new Ball
+            {
+                X = x,
+                Y = y,
+                Radius = radius,
+                Mass = mass,
+                VX = vx,
+                VY = vy
+            });
+            
         }
     }
     

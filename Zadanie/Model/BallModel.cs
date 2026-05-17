@@ -6,15 +6,12 @@ namespace Model;
 public class BallModel : INotifyPropertyChanged
 {
     private readonly Ball _ball;
-    private readonly double _scaleX;
-    private readonly double _scaleY;
     
-    public BallModel(Ball ball, double scaleX = 8.0, double scaleY = 6.0)
+    private readonly double _scale = 8.0;
+    
+    public BallModel(Ball ball)
     {
         _ball = ball;
-        _scaleX = scaleX;
-        _scaleY = scaleY;
-        
         _ball.PropertyChanged += (s, e) =>
         {
             if (e.PropertyName == nameof(Ball.X)) OnPropertyChanged(nameof(X));
@@ -23,11 +20,11 @@ public class BallModel : INotifyPropertyChanged
         };
     }
     
-    public double X => _ball.X * _scaleX;
-    public double Y => _ball.Y * _scaleY;
+    public double X => (_ball.X - _ball.Radius) * _scale;
     
-    public double Diameter => 20;
+    public double Y => (_ball.Y - _ball.Radius) * _scale;
     
+    public double Diameter => (_ball.Radius * 2) * _scale;
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged(string name) =>

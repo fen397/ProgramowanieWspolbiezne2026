@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace Logika;
 
@@ -20,127 +18,90 @@ internal class LogicApi : LogicAbstractApi
     public override void CreateBalls(int count)
     {
         _dataApi.CreateBalls(count);
-
-        // Gdy kula przesunie się w swoim własnym Tasku, wywoła się OnBallPropertyChanged.
         foreach (var ball in _dataApi.GetBalls())
         {
             ball.PropertyChanged += OnBallPropertyChanged;
         }
     }
 
-    public override void Start()
-    {
-        _dataApi.StartSimulation();
-    }
-    public override void Stop()
-    {
-        _dataApi.StopSimulation();
-    }
-
+    public override void Start() => _dataApi.StartSimulation();
+    public override void Stop() => _dataApi.StopSimulation();
     public override IEnumerable<Ball> GetBalls() => _dataApi.GetBalls();
 
     private void OnBallPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (sender is Ball currentBall && (e.PropertyName == "X" || e.PropertyName == "Y"))
         {
-            // Otwieramy SEKCJĘ KRYTYCZNĄ. 
-            // Kule działają w różnych wątkach. Ten lock zapobiega sytuacji, w której
-            // dwie kule naraz próbują zmienić swoje pozycje i prędkości, co mogłoby zepsuć fizykę.
-
             lock (_lock)
             {
+                // Wszystkie obliczenia wykonujemy na wymiarach logicznych planszy (100 x 75)
                 Board board = _dataApi.GetBoard();
-                
-                // 1. Najpierw sprawdzamy, czy kula nie uderzyła w ścianę stołu
                 CheckWallCollision(currentBall, board);
-                
-                // 2. Następnie sprawdzamy, czy kula nie uderzyła w inne kule
                 CheckBallCollision(currentBall);
             }
         }
     }
 
-
-
-    private void CheckWallCollision(Ball currentBall, Board board)
+    private void CheckWallCollision(Ball ball, Board board)
     {
-        double diameter = currentBall.Radius * 2;
-
-        // Odbicie od lewej lub prawej ściany
-        if (currentBall.X <= 0 && currentBall.VX < 0)
+        // Zakładamy, że X i Y w klasie Ball określają ŚRODEK kuli (najwygodniejsze do fizyki i skalowania)
+        
+        // Odbicie od lewej lub prawej ściany logicznej
+        if (ball.X - ball.Radius <= 0 && ball.VX < 0)
         {
-            currentBall.VX *= -1;
+            ball.VX *= -1;
         }
-        else if (currentBall.X + diameter >= board.Width && currentBall.VX > 0)
+        else if (ball.X + ball.Radius >= board.Width && ball.VX > 0)
         {
-            currentBall.VX *= -1;
-        }
-        // Odbicie od górnej lub dolnej ściany
-        if (currentBall.Y <= 0 && currentBall.VY < 0)
-        {
-            currentBall.VY *= -1;
-        }
-        else if (currentBall.Y + diameter >= board.Height && currentBall.VY > 0)
-        {
-            currentBall.VY *= -1;
+            ball.VX *= -1;
         }
 
-
+        // Odbicie od górnej lub dolnej ściany logicznej
+        if (ball.Y - ball.Radius <= 0 && ball.VY < 0)
+        {
+            ball.VY *= -1;
+        }
+        else if (ball.Y + ball.Radius >= board.Height && ball.VY > 0)
+        {
+            ball.VY *= -1;
+        }
     }
-    
+
     private void CheckBallCollision(Ball currentBall)
     {
         foreach (var otherBall in _dataApi.GetBalls())
         {
             if (currentBall == otherBall) continue;
-            
-            // Obliczamy środki obu kul (X i Y to lewy górny róg)
-            double center1X = currentBall.X + currentBall.Radius;
-            double center1Y = currentBall.Y + currentBall.Radius;
-            
-            double center2X = otherBall.X + otherBall.Radius;
-            double center2Y = otherBall.Y + otherBall.Radius;
-            
-            
-            // Różnica pozycji w osiach X i Y
-            double dx = center1X - center2X;
-            double dy = center1Y - center2Y;
-            
-            // Odległość między środkami (Twierdzenie Pitagorasa)
+
+            // Odległość między środkami kul w układzie logicznym
+            double dx = currentBall.X - otherBall.X;
+            double dy = currentBall.Y - otherBall.Y;
             double distance = Math.Sqrt(dx * dx + dy * dy);
-            
-            // Sprawdzamy czy doszło do kontaktu fizycznego
+
+            // Warunek zderzenia: suma promieni logicznych kul
             if (distance <= currentBall.Radius + otherBall.Radius)
             {
-                // Zabezpieczenie przed "zlepianiem się" kul (sprawdzamy kierunek pędu)
                 double velocityDifferenceX = currentBall.VX - otherBall.VX;
                 double velocityDifferenceY = currentBall.VY - otherBall.VY;
-                
-                // Iloczyn skalarny różnicy prędkości i różnicy pozycji
                 double dotProduct = velocityDifferenceX * dx + velocityDifferenceY * dy;
 
-                // Jeśli dotProduct < 0, oznacza to, że kule zbliżają się do siebie. 
-                // Zmieniamy prędkości tylko wtedy, żeby kule, które się nakładają ale oddalają, mogły się gładko rozdzielić.
+                // Kule zbliżają się do siebie
                 if (dotProduct < 0)
                 {
-                    // WZÓR NA ZDERZENIE SPRĘŻYSTE 2D (ELASTIC COLLISION)
                     double massSum = currentBall.Mass + otherBall.Mass;
                     double distanceSquared = distance * distance;
 
-                    // Współczynniki masowe
                     double massCoef1 = (2 * otherBall.Mass) / massSum;
                     double massCoef2 = (2 * currentBall.Mass) / massSum;
 
-                    // Nowe wektory prędkości
+                    // Obliczenie nowych wektorów prędkości po zderzeniu sprężystym
                     currentBall.VX -= massCoef1 * (dotProduct / distanceSquared) * dx;
                     currentBall.VY -= massCoef1 * (dotProduct / distanceSquared) * dy;
 
-                    // Dla drugiej kuli wektor odległości jest odwrotny (-dx, -dy)
                     otherBall.VX -= massCoef2 * (dotProduct / distanceSquared) * (-dx);
                     otherBall.VY -= massCoef2 * (dotProduct / distanceSquared) * (-dy);
                 }
             }
-
         }
     }
 }

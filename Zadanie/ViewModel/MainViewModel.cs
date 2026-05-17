@@ -10,13 +10,15 @@ public class MainViewModel : System.ComponentModel.INotifyPropertyChanged
     private readonly ModelAbstractApi _modelApi;
     private int _ballCount;
     
-    public ObservableCollection<BallModel> Balls { get; } = new();
+    public ObservableCollection<BallModel> Balls { get; } = new ObservableCollection<BallModel>();
     public ICommand StartCommand { get; }
 
     public MainViewModel()
     {
         _modelApi = ModelAbstractApi.CreateApi();
         StartCommand = new RelayCommand(Start);
+
+        BallCount = 5;
     }
 
     public int BallCount
