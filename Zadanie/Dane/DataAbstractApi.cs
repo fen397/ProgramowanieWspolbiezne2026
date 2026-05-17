@@ -37,11 +37,15 @@ internal class DataApi : DataAbstractApi
     
     public override void CreateBalls(int count)
     {
+
+        double radius = 2.5;
+        double mass = 3.0;
+        
         _balls.Clear();
         for (int i = 0; i < count; i++)
         {
             
-            double radius = _random.NextDouble() * (3.5 - 1.5) + 1.5;  // Promień od 1.5 do 3.5
+
             //Obliczamy granice aby kula nie pojawiłą sie w ścianie
             double minX = radius;
             double maxX = _board.Width - radius;
@@ -57,7 +61,7 @@ internal class DataApi : DataAbstractApi
             if (Math.Abs(vx) < 0.1) vx = 0.2;
             if (Math.Abs(vy) < 0.1) vy = 0.2;
             
-            double mass = radius * radius;
+
 
             _balls.Add(new Ball
             {
