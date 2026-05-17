@@ -1,36 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Dane;
-using JetBrains.Annotations;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
+using System.Threading;
 
 namespace Tests;
 
 [TestClass]
-[TestSubject(typeof(DataAbstractApi))]
 public class DataAbstractApiTest
 {
-
-    [TestMethod]
-    public void CreateBallsTest()
+    private DataAbstractApi _dataApi;
+    [TestInitialize]
+    public void Setup()
     {
-        DataAbstractApi api = DataAbstractApi.CreateApi();
-        
-        api.CreateBalls(5);
-        var balls = api.GetBalls();
-        
-        Assert.AreEqual(5, ((List<Ball>)balls).Count);
-
+        _dataApi = DataAbstractApi.CreateApi();
     }
-    
+
     [TestMethod]
-    public void BoardDimensionTest()
+    public void CreateBalls_ShouldGenerateCorrectNumberOfBalls()
     {
-        DataAbstractApi api = DataAbstractApi.CreateApi();
+        _dataApi.CreateBalls(5);
+        var balls = _dataApi.GetBalls().ToList();
+        Assert.AreEqual(5, balls.Count);
+    }
 
-        var board = api.GetBoard();
+    [TestMethod]
+    public void CreateBalls_BallsShouldHaveValidParameters()
+    {
+        _dataApi.CreateBalls(1);
+        var ball = _dataApi.GetBalls().First();
         
-        Assert.AreEqual(100, board.Width);
-        Assert.AreEqual(100, board.Height);
+        Assert.IsTrue(ball.Mass > 0, "Masa powinna być większa od zera.");
+        Assert.IsTrue(ball.Radius > 0, "Promień powinien być większy od zera.");
+        Assert.IsTrue(ball.VX != 0 || ball.VY != 0, "Kula nie może stać w miejscu na starcie.");
+    }
 
+    [TestMethod]
+    public void StartSimulation_ShouldMoveBallsAsynchronously()
+    {
+        _dataApi.CreateBalls(1);
+        var ball = _dataApi.GetBalls().First();
+        
+        double initialX = ball.X;
+        double initialY = ball.Y;
+        
+        ball.VX = 2.0;
+        ball.VY = 2.0;
+        
+        _dataApi.StartSimulation();
+        
+        Thread.Sleep(100); 
+        
+        _dataApi.StopSimulation();
+        
+        Assert.AreNotEqual(initialX, ball.X, "Kula powinna zmienić pozycję X.");
+        Assert.AreNotEqual(initialY, ball.Y, "Kula powinna zmienić pozycję Y.");
     }
 }
