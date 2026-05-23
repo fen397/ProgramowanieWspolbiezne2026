@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Dane;
 
@@ -70,6 +71,7 @@ public class Ball : INotifyPropertyChanged
     //Mechanizm współbierzności 
     private Task? _moveTask;
     public bool _stopRequested;
+    private readonly Stopwatch stopwatch = new Stopwatch();
 
     
     //Metoda uruchamiająca niezależny ruch kuli
@@ -81,8 +83,14 @@ public class Ball : INotifyPropertyChanged
         {
             while (!_stopRequested)
             {
-                X += VX;
-                Y += VY;
+                stopwatch.Stop();
+                double timeElapsed = stopwatch.ElapsedMilliseconds;
+                stopwatch.Restart();
+                
+                double timeMultiplier = timeElapsed / 10.0;
+                
+                X += VX  * timeMultiplier;
+                Y += VY  * timeMultiplier;
                 // Odpoczynek zadania na 16 milisekund (zapewnia płynność ok. 60 klatek na sekundę) i pozwala innym wątkom na dostęp do procesora
                 await Task.Delay(16);
             }

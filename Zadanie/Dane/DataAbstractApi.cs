@@ -18,13 +18,15 @@ public abstract class DataAbstractApi
 
 }
 
-internal class DataApi : DataAbstractApi
+internal class DataApi : DataAbstractApi, IDisposable
 {
     private readonly List<Ball> _balls = new List<Ball>();
     private readonly Board _board;
     
     private readonly Random _random = new Random();
 
+    private readonly Logger _logger = new  Logger();
+    
     public DataApi()
     {
         _board = new Board(100, 75);
@@ -63,7 +65,7 @@ internal class DataApi : DataAbstractApi
             
 
 
-            _balls.Add(new Ball
+            var ball = new Ball
             {
                 X = x,
                 Y = y,
@@ -71,7 +73,16 @@ internal class DataApi : DataAbstractApi
                 Mass = mass,
                 VX = vx,
                 VY = vy
-            });
+            };
+            ball.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == "X" || args.PropertyName == "Y")
+                {
+                    _logger.LogBallState((Ball)sender!);
+                }
+            };
+
+            _balls.Add(ball);
             
         }
     }
@@ -96,6 +107,12 @@ internal class DataApi : DataAbstractApi
         {
             ball.StopMovement();
         }
+    }
+    
+    public void Dispose()
+    {
+        // To wywoła czyszczenie i zamknięcie pliku w Loggerze
+        _logger.Dispose(); 
     }
     
 }
